@@ -1,37 +1,43 @@
-import spiller as sp
 import kort as k
 global spiller_dealer
+##Brugers penge
 penge=100
+##Computers penge
 pc_penge = 100
-# global spiller1
-# global dealer
+##Boolean til at styre om hele spillet skal lukkes
 global spillethel
+##Boolean for at styre træk eller stå Funktionen, og hvornår man skal gå ud af den funktion
 global spiligang
 spillethel = True
 
 
+# Viser hvor mange penge
 def vis_penge():
-    global pc
+    ## Variabel for spiller bet
     global bet
+    #Variabel for computers bet
     global pc_bet
-    # print(len(deck))
+    ##Tjekker om spiller er dealer hvis spiller ikke er dealer skal computer nemlig vise penge i stedet
     if spiller_dealer==False:
         print("Du har så mange penge: {0}".format(penge))
     else:
         print("Computer har så mange penge: {0}".format(pc_penge))
+    ## Restter bets til 0
     bet = 0
     pc_bet = 0
     return bet,pc_bet
-    # spiller1 = sp.Hånd()
-    # dealer = sp.Hånd()
 
+
+##Funktion til at vise hånd for bruger
 def vis_hånd_spiller(spiller1):
     print("Spillers hånd")
     for kort in spiller1.korthånd:
         print(kort)
 
-def vis_hånd_dealer(dealer):
+##Funktion til at vise computers hånd
+def vis_hånd_computer(dealer):
     print("Computer hånd")
+    ##Her printer den ikke det først kort ud hvis computer er dealer
     if spiller_dealer==False:
         for kort in dealer.korthånd[1:]:
             print("Første kort skjult")
@@ -40,20 +46,23 @@ def vis_hånd_dealer(dealer):
         for kort in dealer.korthånd:
             print(kort)
 
+#Funktion der så printer både computer og brugers hånd ud
 def vis_alle_hænder(spiller1,dealer):
     global spiligang
     if (spiller_dealer == False):
         vis_hånd_spiller(spiller1)
-        vis_hånd_dealer(dealer)
+        vis_hånd_computer(dealer)
     else:
-        vis_hånd_dealer(dealer)
+        vis_hånd_computer(dealer)
         vis_hånd_spiller(spiller1)
     spiligang=True
 
 
-
+#Funktion hvor bruger for lov til at vælge om han vil være spiller eller dealer
 def spiller_type():
+    ##boolean der styrer spillers rolle
     global spiller_dealer
+    ##Loop der kører indtil spiller har indtastet g eller d og bliver ved hvis man ikke taster ind af de to ting
     while True:
         spiller_svar = input("Vil du være gambler eller dealer? Tryk g eller d" )
         if spiller_svar=="g":
@@ -69,6 +78,7 @@ def spiller_type():
             print ("Prøv Igen")
             continue
 
+##Funktion der styrer bets, og spørger bruger om hvor meget han vil bette, og man skal angive et tal eller blivver man spurgt igen
 def betting():
     while True:
         try:
@@ -82,11 +92,13 @@ def betting():
         else:
             return svar
 
+#Funktion der regner alle bets ud og printer ud hvor meget bruger eller pc har bettet
 def regn_bets():
     global penge
     global pc_penge
     global bet
     global pc_bet
+    ##Hvis spiller er bruger regner den bet ud for spiller ellers regner den ud for computer
     if (spiller_dealer == False):
         bet = betting()
         penge = penge - bet
@@ -96,16 +108,18 @@ def regn_bets():
         pc_penge = pc_penge - pc_bet
         return print("Computer har bettet: {0} og har {1} tilbage".format(pc_bet, pc_penge))
 
+#Funktion der bliver ved med at køre til der er fundet en vinder af spillet
 def træk_eller_stå(spiller1,dealer,deck):
+    global spiligang
+    global penge
+    ##Loop der bliver styret af spiligang, loopet stopper enten når spiller indtaster s eller der er fundet en vinder
     while True:
-        global spiligang
-        global penge
-        # if (spiller_dealer == False):
+        #Her printer den kun det første kort ud for computer hvis spiller er dealer ellers printer den ikke det første kort
         if spiller_dealer:
             print("Spiller har: {0} point og Computer har: {1} point".format(spiller1.værdi,dealer.værdi))
         else:
             print("Spiller har: {0} point og Computer har: {1} point".format(spiller1.værdi,dealer.skjultVærdi))
-
+        #Her i loopet bliver spiller spurgt om han vil trække et nyt kort eller beholde sin hånd ved at indtaste s
         svar =input("Vil du trække et kort eller stå? Tryk 't' eller 's")
         if svar=="t":
                 # spiller1.tilføj_kort(k.delkort(deck))
@@ -113,19 +127,21 @@ def træk_eller_stå(spiller1,dealer,deck):
             vis_hånd_spiller(spiller1)
         elif svar=="s":
             print("Du har valgt at stå")
+            #Hvis spiller ikke er dealer får computer først lov til at trække kort når spiller har trukket alle sine, og stopper
+            #Når computer når en korthånds værdi af 16
             if spiller_dealer == False:
                 while dealer.værdi<16:
                     # dealer.tilføj_kort(k.delkort(deck))
                     k.trækkort(dealer,deck)
-                    vis_hånd_dealer(dealer)
+                    vis_hånd_computer(dealer)
             spiligang = False
             return tjekvinder(spiller1,dealer)
-
+        #her stopper loopet ikke hvis man ikke indtaster t eller s
         else:
             print("Du skal indtaste 't' eller 's'!")
             continue
         break
-
+## Funktion
 def tjekvinder(spiller1,dealer):
     global penge
     global pc_penge
@@ -176,7 +192,7 @@ def spiller_er_dealer(spiller1,dealer,deck):
     global spiligang
     while dealer.værdi < 16:
         k.trækkort(dealer,deck)
-        vis_hånd_dealer(dealer)
+        vis_hånd_computer(dealer)
     if dealer.værdi > 21:
         print("Computer har trukket over 21!")
         print("Spiller har vundet!")

@@ -76,7 +76,7 @@ while helespillet:
         for kort in spiller1.korthånd:
             print(kort)
 
-    def vis_hånd_dealer():
+    def vis_hånd_computer():
         print("Computer hånd")
         # print("Korthånds værdi: {0}".format(dealer.værdi))
         for kort in dealer.korthånd:
@@ -116,9 +116,9 @@ while helespillet:
     # dealer.tilføj_kort(k.delkort(deck))
     if (spiller_dealer == False):
         vis_hånd_spiller()
-        vis_hånd_dealer()
+        vis_hånd_computer()
     else:
-        vis_hånd_dealer()
+        vis_hånd_computer()
         vis_hånd_spiller()
     spiligang = True
 
@@ -141,7 +141,7 @@ while helespillet:
                     while dealer.værdi<16:
                         # dealer.tilføj_kort(k.delkort(deck))
                         trækkort(dealer)
-                        vis_hånd_dealer()
+                        vis_hånd_computer()
                 spiligang = False
                 tjekvinder()
 
@@ -154,7 +154,7 @@ while helespillet:
         global spiligang
         while dealer.værdi < 16:
             trækkort(dealer)
-            vis_hånd_dealer()
+            vis_hånd_computer()
         if dealer.værdi > 21:
             print("Computer har trukket over 21!")
             print("Spiller har vundet!")
