@@ -1,8 +1,6 @@
 import kort as k
 global spiller_dealer
-##Brugers penge
 penge=100
-##Computers penge
 pc_penge = 100
 ##Boolean til at styre om hele spillet skal lukkes
 global spillethel
@@ -141,27 +139,34 @@ def træk_eller_stå(spiller1,dealer,deck):
             print("Du skal indtaste 't' eller 's'!")
             continue
         break
-## Funktion
+##Funktion der tjekker hvem der har vundet
 def tjekvinder(spiller1,dealer):
     global penge
     global pc_penge
     global pc_bet
     global bet
+    #Printer det endelig resultat af spiller og computer ud
     print("Spiller har så mange point : {0}".format(spiller1.værdi))
     print("Computer har så mange point : {0}".format(dealer.værdi))
+    #Tjeker om dealers værdi er højere end 21 hvis det er vinder spiller
     if dealer.værdi > 21:
         print("Computer har trukket over 21!")
         print("Spiller har vundet!")
+        #Hvis spiller vinder får spillet sit bet i penge
         penge = penge + (bet * 2)
         return playAgain()
+    #Tjekker om spiller har højest værdi
     elif spiller1.værdi > dealer.værdi:
         print("Spiller har vundet!")
         penge = penge + (bet * 2)
         return playAgain()
+    #Tjekker om dealer har højest værdi i sin hånd
     elif dealer.værdi > spiller1.værdi:
         print("Computer har vundet!")
+        #Hvis computer vinder skal han have sin
         pc_penge = pc_penge+(pc_bet*2)
         return playAgain()
+    #Tjekker om bruger og computers hånd har samme værdi, hvis de har får de deres bet tilbage i penge
     elif dealer.værdi == spiller1.værdi:
         print("Push! Det blev uafgjort!")
         penge = penge + bet
@@ -169,13 +174,16 @@ def tjekvinder(spiller1,dealer):
         return playAgain()
 
 
+#Spørger spiller om han vil spille igen
 def playAgain():
     global spillethel
+    #if statement til at tjekke om computer har flere penge, hvis computer ikke har nogen penge slutter spillet og bruger vinder
     if pc_penge == 0:
         print("Computer har ikke flere penge og har tabt spillet!")
         # helespillet = False
         spillethel = False
     else:
+        #Loop der bliver ved med at spørge bruger om han vil spille igen og bliver ved med at køre indtil svar j eller n er giver
         while True:
             svar = input("Vil du spille igen? Tryk j eller n")
             if svar == "j":
@@ -188,11 +196,13 @@ def playAgain():
                 print("Du skal indtaste 'j' eller 'n'!")
                 continue
 
+#Kører spillet på en anden måde hvis spiller er dealer, her spiller computer sin hånd før spiller
 def spiller_er_dealer(spiller1,dealer,deck):
     global spiligang
     while dealer.værdi < 16:
         k.trækkort(dealer,deck)
         vis_hånd_computer(dealer)
+    ##Hvis dealers værdi ryger over 21 taber han med det samme
     if dealer.værdi > 21:
         print("Computer har trukket over 21!")
         print("Spiller har vundet!")
@@ -202,6 +212,7 @@ def spiller_er_dealer(spiller1,dealer,deck):
     else:
         træk_eller_stå(spiller1,dealer,deck)
 
+#Vælger hvilken funktion der skal spilles i forhold til om bruger er spiller eller dealer
 def spillets_gang(spiller1,dealer,deck):
     global pc_penge
     while spiligang:
